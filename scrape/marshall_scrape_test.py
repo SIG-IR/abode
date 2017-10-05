@@ -71,7 +71,7 @@ apt_link = 'http://champaignmarshallapartments.com/105_E_John.html'
 
 html = urllib2.urlopen(apt_link).read()
 
-soup = BeautifulSoup(html, 'lxml')
+soup = BeautifulSoup(html, 'html5lib')
 
 lis = soup.find('ul', {'class', 'position2'}).find_all('li')
 
