@@ -1,4 +1,5 @@
 import urllib2
+import string_parser as sp
 from bs4 import BeautifulSoup
 
 def find_num_beds(string):
@@ -8,20 +9,9 @@ def find_num_beds(string):
             return 2
     elif string.find('Three bed') > -1 or string.find('3 bed') > -1:
             return 3
-    elif string.find('Four bed') > -1 or string.find('4 bed') > -1:
-        return 4
-    elif string.find('Five bed') > -1 or string.find('5 bed') > -1:
-        return 5
     else:
         return -1
 
-def find_price(string):
-    index_of_dollar = string.find('$')
-    index_of_next_space = string.find(' ', index_of_dollar)
-    if index_of_dollar > -1 and index_of_next_space > -1:
-        return string[index_of_dollar + 1: index_of_next_space].replace(',', '')
-    else:
-        return -1
 
 #TODO REMOVE PRICE FROM INFO
 def look_for_and_remove_price(info):
@@ -30,11 +20,11 @@ def look_for_and_remove_price(info):
     for i in info:
         if find_num_beds(i) > -1 and i.find('$') > -1:
             price['num_beds'] = find_num_beds(i)
-            price['monthly_rate'] = int(find_price(i))
+            price['monthly_rate'] = int(sp.find_price(i))
             prices.append(price)
             price = {}
         elif i.find('$') > -1:
-            price['monthly_rate'] = int(find_price(i))
+            price['monthly_rate'] = int(sp.find_price(i))
         elif find_num_beds(i) > -1:
             price['num_beds'] = find_num_beds(i)
 
@@ -80,9 +70,6 @@ visited_links = []
 
 for li in lis:
     info.append(li.string)
-
-#for link in soup.findAll('a', href=True):
-    #print "http://champaignmarshallapartments.com/" + link['href']
 
 for a in info:
     print a
