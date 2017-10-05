@@ -23,6 +23,7 @@ def find_price(string):
     else:
         return -1
 
+#TODO REMOVE PRICE FROM INFO
 def look_for_and_remove_price(info):
     prices = []
     price = {}
