@@ -12,7 +12,6 @@ def find_num_beds(string):
     else:
         return -1
 
-
 #TODO REMOVE PRICE FROM INFO
 def look_for_and_remove_price(info):
     prices = []
@@ -40,10 +39,23 @@ def find_image_links(soup):
         img_links.append("http://champaignmarshallapartments.com/"  + img['src'])
     return img_links
 
+def get_info(list_elements):
+    info = []
+    for element in list_elements:
+        if element.string != None:
+            info.append(element.string)
+    return info
 
-def create_apartment_from_soup(soup, link):
+
+def get_apartment_from_link(apt_link):
+    connection = urllib2.urlopen(apt_link)
+    html = connection.read()
+    connection.close()
+    soup = BeautifulSoup(html, 'html5lib')
+
+    info = get_info(soup.find_all('li'))
     apartment_schema = {}
-    apartment_schema['link'] = link
+    apartment_schema['link'] = apt_link
     apartment_schema['address'] = soup.find('h1', {'class', 'heading1'}).string
     apartment_schema['rate'] = look_for_and_remove_price(info)
     apartment_schema['pictures'] = find_image_links(soup)
@@ -52,31 +64,16 @@ def create_apartment_from_soup(soup, link):
             'name': None,
             'phone': '217-356-1407'
     }
+    apartment_schema['pets_allowed'] = False
+    apartment_schema['info'] = info
 
-    print apartment_schema
+    return apartment_schema
 
 
 
-apt_link = 'http://champaignmarshallapartments.com/105_E_John.html'
 
-html = urllib2.urlopen(apt_link).read()
 
-soup = BeautifulSoup(html, 'html5lib')
-
-lis = soup.find('ul', {'class', 'position2'}).find_all('li')
-
-info = []
-visited_links = []
-
-for li in lis:
-    info.append(li.string)
-
-for a in info:
-    print a
-
-find_image_links(soup)
-
-create_apartment_from_soup(soup, apt_link)
+print get_apartment_from_link('http://champaignmarshallapartments.com/207_&_209_E_Healey.html')
 
 
 
@@ -86,13 +83,11 @@ apartment schema: { link: String,
                     address: String,
                     rate: [LIST]{num_beds: Number,
                             monthly_rate: Number},
-                    lat: String,
-                    long: String,
                     landlord: { email: String,
                                 name: String,
                                 phone: String },
                     pictures: String[],
                     info: String[],
-                    pets: Boolean
+                    pets_allowed: Boolean
                 }
 '''
