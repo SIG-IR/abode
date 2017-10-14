@@ -5,8 +5,9 @@ Nathan changed this
 
 apartment schema: { link: String,
                      address: String,
-                     rate: [LIST]{num_beds: Number,
-                             monthly_rate: Number},
+                     beds: Integer,
+                     bathrooms: Integer,
+                     rate: Integer,
                      landlord: { email: String,
                                  name: String,
                                  phone: String },

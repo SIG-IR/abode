@@ -4,7 +4,10 @@ The input json for each website so the scraper can get data should look like thi
   "link":required,
   "address":optional
   "rate": [per-person,total] required,
+  "beds": optional,
+  "bathrooms": optional,
   "phone": optional,
   "email": optional,
-  "info": "<tag attr>" or "the info in plain text" required
+  "info-given":required,
+  "info": "tag" or "the info in plain text" if info-given is true required
 }
