@@ -11,6 +11,5 @@ apartment schema: { link: String,
                                  name: String,
                                  phone: String },
                      pictures: String[],
-                     info: String[],
-                     pets: Boolean
+                     info: String[]
                  }

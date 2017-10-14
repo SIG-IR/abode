@@ -6,5 +6,6 @@ setup(name='api',
     install_requires=[
         'beautifulsoup4',
         'html5lib',
+        'selenium'
     ],
 )
