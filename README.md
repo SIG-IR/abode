@@ -1,9 +1,6 @@
-This is an node.js api that serves information about uiuc apartments that were scrapped using python.
+This is an Node.js api that serves information about UIUC apartments that were scraped using Python libraries.
 
-Nathan changed this
-
-
-apartment schema: { link: String,
+current apartment schema: { link: String,
                      address: String,
                      beds: Integer,
                      bathrooms: Integer,
