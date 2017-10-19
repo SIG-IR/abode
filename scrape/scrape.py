@@ -15,7 +15,7 @@ def scrape(json_file):
 
     browser.get(config["link"])
     soup = BeautifulSoup(browser.page_source, "html5lib")
-    main = soup.main
+    body = soup.body
 
     output = {}
     if "beds" in config:
@@ -45,14 +45,14 @@ def scrape(json_file):
 
     # get all images
     images = []
-    for img in main.find_all("img"):
+    for img in body.find_all("img"):
         images.append(img["src"])
     output["images"] = images
 
     # find price
     price_pattern = re.compile("\$\d{3,4}")
     price_str = soup.find_all(text=price_pattern, recursive=True)
-
+    #print price_str
     price = int(re.search("\d+", price_str[0]).group())
 
     if config["rate"] == "per-person":
@@ -60,18 +60,8 @@ def scrape(json_file):
     else:
         output["price"] = price
 
-    if config["info-given"]:
-        output["info"] = config["info"]
-    else:
-        info_list = []
-        for info in main.find_all(config["info"], recursive=True):
-            info_list.append(info.contents)
-        output["info"] = info_list
-
-    print output
-
     # TODO: address, phone,beds,bathroom
 
 
 if __name__ == "__main__":
-    scrape("./json/309_2bed.json")
+    scrape("./json/bankier.json")
