@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 from selenium import webdriver
 import re
 import json
@@ -15,7 +15,10 @@ def scrape(json_file):
 
     browser.get(config["link"])
     soup = BeautifulSoup(browser.page_source, "html5lib")
-    body = soup.body
+
+    #remove all comments
+    for comment in soup.body.find_all(text=lambda text: isinstance(text, Comment)):
+        comment.extract()
 
     output = {}
 
@@ -25,7 +28,7 @@ def scrape(json_file):
         output["beds"] = config["beds"]
     else:
         #find full string
-        beds_full_str = soup.find(recursive=True, text=re.compile("\d (bed)",re.I))
+        beds_full_str = soup.body.find(recursive=True, text=re.compile("\d (bed)",re.I))
         #find bed part
         #TODO handle if no beds found
         beds_str = re.search("\d (bed)", beds_full_str, re.I).group(0)
@@ -39,7 +42,7 @@ def scrape(json_file):
         output["bathrooms"] = config["bathrooms"]
     else:
         #find full string
-        bathroom_full_str = soup.find(recursive=True, text=re.compile("(\d (bath))",re.I))
+        bathroom_full_str = soup.body.find(recursive=True, text=re.compile("(\d (bath))",re.I))
         #find bathroom part
         #TODO handle if there are no bathrooms found
         bathroom_str = re.search("(\d (bath))", bathroom_full_str, re.I).group(0)
@@ -51,13 +54,13 @@ def scrape(json_file):
     # get all images
     #TODO: improve image scrapping
     images = []
-    for img in body.find_all("img"):
+    for img in soup.body.find_all("img"):
         images.append(img["src"])
     output["images"] = images
 
     # find price
     price_pattern = re.compile("\$\d{3,4}")
-    price_str = soup.find_all(text=price_pattern, recursive=True)
+    price_str = soup.body.find_all(text=price_pattern, recursive=True)
     print price_str
     price = int(re.search("\d+", price_str[0]).group())
     print price
