@@ -70,6 +70,39 @@ def get_apartment_from_link(apt_link):
     return apartment_schema
 
 
+def get_all_univisited_links_in_page(soup, visited_links):
+    root_link = 'http://champaignmarshallapartments.com/'
+    links = []
+    for a in soup.find_all('a', href=True):
+        link = a['href']
+
+        #if not an outside link
+        if link.find('http://') == -1:
+            internal_link = root_link + link
+            if internal_link not in visited_links
+            links.append(internal_link)
+
+    return links
+
+
+#breadth-first searching of apt links
+def get_apt_links(starting_link):
+    root_link = 'http://champaignmarshallapartments.com/'
+    visited_links=[]
+    apt_links=[]
+
+    connection = urllib2.urlopen(apt_link)
+    html = connection.read()
+    connection.close()
+    soup = BeautifulSoup(html, 'html5lib')
+
+    current_page = soup
+    links = get_all_links_in_page(soup)
+
+
+
+
+
 
 
 
