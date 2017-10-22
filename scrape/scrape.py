@@ -89,4 +89,4 @@ def scrape(json_file):
     print output
 
 if __name__ == "__main__":
-    scrape("./json/309_2bed.json")
+    scrape("./json/test.json")
