@@ -17,7 +17,9 @@ def scrape(json_file):
     soup = BeautifulSoup(browser.page_source, "html5lib")
 
     #TODO: regex the content portion to work for all sites
-    content = soup.find("div",id="content")
+    content = soup.find("div",id=["content"])
+    if content == None:
+        content = soup.find("div",class_=["page-content"])
     print content
     #remove all comments
     for comment in soup.body.find_all(text=lambda text: isinstance(text, Comment)):
