@@ -66,5 +66,7 @@ def scrape(json_file):
     else:
         output["price"] = price
 
+    print output
+
 if __name__ == "__main__":
     scrape("./json/309_2bed.json")
