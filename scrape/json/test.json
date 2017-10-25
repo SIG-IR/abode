@@ -1,4 +1,5 @@
 {
   "link": "http://cpm-apts.com/properties/606-e-stoughton-champaign-il/?tour=1",
-  "rate": "per-person"
+  "rate": "per-person",
+  "a_img_classes":["item", "galleryItem"]
 }
