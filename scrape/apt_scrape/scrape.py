@@ -1,26 +1,15 @@
 from bs4 import BeautifulSoup, Comment
-from selenium import webdriver
 import re
-import json
 
 
-def scrape(json_file):
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
-    browser = webdriver.Chrome(
-        executable_path="./chromedriver", chrome_options=options)
+def scrape(raw_html, config):
 
-    raw_json = open(json_file, "r").read()
-    config = json.loads(raw_json)
-
-    browser.get(config["link"])
-    soup = BeautifulSoup(browser.page_source, "html5lib")
+    soup = BeautifulSoup(raw_html, "html5lib")
 
     #TODO: regex the content portion to work for all sites
     content = soup.find("div",id=["content"])
     if content == None:
         content = soup.find("div",class_=["page-content"])
-    print content
     #remove all comments
     for comment in soup.body.find_all(text=lambda text: isinstance(text, Comment)):
         comment.extract()
@@ -47,7 +36,6 @@ def scrape(json_file):
         beds_full_str = content.find(recursive=True, text=re.compile("\d (bed|br)",re.I))
         #find bed part
         if beds_full_str != None:
-            print beds_full_str
             beds_str = re.search("\d (bed|br)", beds_full_str, re.I)
             if beds_str != None:
                 beds = int(re.search("\d", beds_str.group()).group())
@@ -86,7 +74,4 @@ def scrape(json_file):
     else:
         output["price"] = price
 
-    print output
-
-if __name__ == "__main__":
-    scrape("./json/test.json")
+    return output
