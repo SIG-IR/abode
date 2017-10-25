@@ -1,2 +1,2 @@
 import apt_scrape
-apt_scrape.scrape_all("../json")
+print apt_scrape.scrape_all("../json")
