@@ -61,7 +61,8 @@ def scrape(json_file):
         output["bathrooms"] = config["bathrooms"]
     else:
         #find full string
-        bathroom_full_str = content.find(recursive=True, text=re.compile("(\d (bath))",re.I))
+        bathroom_full_str = content.find(recursive=True, text=re.compile("([0-9]-[0-9])",re.I))
+        print bathroom_full_str
         #find bathroom part
         #TODO handle if there are no bathrooms found
         if bathroom_full_str != None:
