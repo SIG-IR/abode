@@ -49,7 +49,8 @@ def scrape(raw_html, config):
         output["bathrooms"] = config["bathrooms"]
     else:
         #find full string
-        bathroom_full_str = content.find(recursive=True, text=re.compile("(\d (bath))",re.I))
+        bathroom_full_str = content.find(recursive=True, text=re.compile("([0-9]-[0-9])",re.I))
+        print bathroom_full_str
         #find bathroom part
         #TODO handle if there are no bathrooms found
         if bathroom_full_str != None:
@@ -57,6 +58,18 @@ def scrape(raw_html, config):
             if bathroom_str != None:
                 bathroom = int(re.search("\d", bathroom_str.group()).group())
                 output["bathrooms"] = bathroom
+
+    if "a_img_classes" in config:
+        img_links = []
+        for a in soup.find_all("a", class_=config["a_img_classes"]):
+            img_links.append(a["href"])
+        output["images"] = img_links
+
+    if "img_classes" in config:
+        img_links = []
+        for img in soup.find_all("img", class_=config["img_classes"]):
+            img_links.append(a["href"])
+        output["images"] = img_links
 
     # get all images
     #TODO: improve image scrapping
