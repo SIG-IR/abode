@@ -9,7 +9,7 @@ def scrape(raw_html, config):
     #TODO: regex the content portion to work for all sites
     content = soup.find("div",id=["content"])
     if content == None:
-        content = soup.find("div",class_=["page-content"])
+        content = soup.find("div",class_=["page-content","info"])
     #remove all comments
     for comment in soup.body.find_all(text=lambda text: isinstance(text, Comment)):
         comment.extract()
@@ -49,8 +49,7 @@ def scrape(raw_html, config):
         output["bathrooms"] = config["bathrooms"]
     else:
         #find full string
-        bathroom_full_str = content.find(recursive=True, text=re.compile("([0-9]-[0-9])",re.I))
-        print bathroom_full_str
+        bathroom_full_str = content.find(recursive=True, text=re.compile("(\d (bath))",re.I))
         #find bathroom part
         #TODO handle if there are no bathrooms found
         if bathroom_full_str != None:
@@ -59,24 +58,18 @@ def scrape(raw_html, config):
                 bathroom = int(re.search("\d", bathroom_str.group()).group())
                 output["bathrooms"] = bathroom
 
+
     if "a_img_classes" in config:
         img_links = []
         for a in soup.find_all("a", class_=config["a_img_classes"]):
             img_links.append(a["href"])
         output["images"] = img_links
-
+    #TODO: you would overwrite images if there is a_img and img
     if "img_classes" in config:
         img_links = []
         for img in soup.find_all("img", class_=config["img_classes"]):
             img_links.append(a["href"])
         output["images"] = img_links
-
-    # get all images
-    #TODO: improve image scrapping
-    images = []
-    for img in content.find_all("img"):
-        images.append(img["src"])
-    #output["images"] = images
 
     # find price
     price_pattern = re.compile("\$\d{3,4}")
